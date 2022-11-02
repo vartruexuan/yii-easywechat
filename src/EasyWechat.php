@@ -123,5 +123,4 @@ class EasyWechat
     {
         return $this->getConfig('common');
     }
-
 }
