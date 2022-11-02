@@ -7,7 +7,6 @@ use EasyWeChat\Factory;
 use EasyWeChat\Kernel\ServiceContainer;
 use yii\base\Component;
 use yii\base\StaticInstanceTrait;
-use yii\di\Instance;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -21,7 +20,7 @@ use yii\helpers\ArrayHelper;
  * @method \EasyWeChat\OpenWork\Application  openWork($config = 'default')
  * @method \EasyWeChat\MicroMerchant\Application  microMerchant($config = 'default')
  */
-class EasyWechat
+class EasyWechat extends Component
 {
     use StaticInstanceTrait;
 
@@ -35,10 +34,12 @@ class EasyWechat
 
     protected array $appInstances = [];
 
-
     public function __call($name, $arguments)
     {
-        return $this->getApp($name, $arguments[0] ?? 'default');
+        if (in_array($name, $this->getAppNames())) {
+            return $this->getApp($name, $arguments[0] ?? 'default');
+        }
+        return parent::__call($name, $arguments);
     }
 
     /**
@@ -56,6 +57,7 @@ class EasyWechat
     protected function getApp(string $appName = self::APP_OFFICIAL_ACCOUNT, $config = 'default')
     {
         $appConfig = is_array($config) ? $config : $this->getAppConfig($appName, $config);
+
         $isConfigKey = is_string($config);
         $app = $this->appInstances[$appName][$config] ?? null;
 
@@ -69,6 +71,26 @@ class EasyWechat
         return $app;
     }
 
+    /**
+     * app实例名集合
+     *
+     * @return string[]
+     *
+     * @date 2022/11/2
+     * @author vartruexuan
+     */
+    protected function getAppNames()
+    {
+        return [
+            static::APP_OFFICIAL_ACCOUNT,
+            static::APP_PAYMENT,
+            static::APP_MINI_PROGRAM,
+            static::APP_OPEN_PLATFORM,
+            static::APP_WORK,
+            static::APP_OPEN_WORK,
+            static::APP_MICRO_MERCHANT,
+        ];
+    }
 
     /**
      * 获取app配置
@@ -92,7 +114,7 @@ class EasyWechat
     /**
      * 获取配置
      *
-     * @param ?string $key   key1.key2
+     * @param ?string $key key1.key2
      *
      * @return mixed
      * @throws \Exception
