@@ -10,7 +10,8 @@
     ],
     "require": {
         "php": ">=7.4",
-        "w7corp/easywechat": "^5.31"
+        "yiisoft/yii2": "~2.0.6",
+        "w7corp/easywechat": "^5.30"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.8",
@@ -22,7 +23,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Vendor\\Package\\": "src"
+            "Vartruexuan\\EasyWechat\\": "src"
         }
     },
     "extra": {
