@@ -56,19 +56,42 @@ class EasyWechat extends Component
      */
     protected function getApp(string $appName = self::APP_OFFICIAL_ACCOUNT, $config = 'default')
     {
-        $appConfig = is_array($config) ? $config : $this->getAppConfig($appName, $config);
-
+        $wechatConfig = $this->getAppWechatConfig($appName, $config);
         $isConfigKey = is_string($config);
-        $app = $this->appInstances[$appName][$config] ?? null;
+        $appConfig = !$isConfigKey ? $config : $this->getAppConfig($appName, $config);
 
-        if (!$app) {
-            $app = Factory::{$appName}($appConfig);
+        if ($isConfigKey) {
+            $app = $this->appInstances[$appName][$config] ?? null;
         }
+        if (!isset($app)) {
+            $app = Factory::{$appName}($appConfig);
+            // 绑定替换服务对象
+            $this->rebind($app, $wechatConfig['rebind'] ?? []);
+        }
+
         if ($isConfigKey) {
             $this->appInstances[$appName][$config] = $app;
         }
 
         return $app;
+    }
+
+    /**
+     * 替换app对应模块
+     *
+     * @param ServiceContainer $app
+     * @param                  $rebinds
+     *
+     * @return void
+     *
+     * @date 2022/11/2
+     * @author vartruexuan
+     */
+    protected function rebind(ServiceContainer &$app, $rebinds)
+    {
+        foreach ($rebinds as $id => $rebind) {
+            $app->rebind($id, $rebind);
+        }
     }
 
     /**
@@ -107,8 +130,42 @@ class EasyWechat extends Component
     protected function getAppConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default'): array
     {
         $appConfig = $this->getConfig("{$appName}.{$configKey}");
-        $commonConfig = $this->commonConfig();
+        $commonConfig = $this->getAppCommonConfig();
         return array_merge($commonConfig ?? [], $appConfig);
+    }
+
+
+    /**
+     * 获取app公共配置
+     *
+     * @return ?array
+     * @throws \Exception
+     *
+     * @date 2022/11/2
+     * @author vartruexuan
+     */
+    protected function getAppCommonConfig(): ?array
+    {
+        return $this->getConfig('appCommon');
+    }
+
+    /**
+     * 获取当前组件独有配置
+     *
+     * @param string $appName
+     * @param string $configKey
+     *
+     * @return array
+     * @throws \Exception
+     *
+     * @date 2022/11/2
+     * @author vartruexuan
+     */
+    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default')
+    {
+        $wechatConfig = $this->getConfig('easywechat');
+        $appNameConfig = $this->getAppConfig($appName, $configKey);
+        return array_merge($wechatConfig ?? [], $appNameConfig['wechat'] ?? []);
     }
 
     /**
@@ -132,17 +189,4 @@ class EasyWechat extends Component
     }
 
 
-    /**
-     * 获取公共配置
-     *
-     * @return ?array
-     * @throws \Exception
-     *
-     * @date 2022/11/2
-     * @author vartruexuan
-     */
-    protected function commonConfig(): ?array
-    {
-        return $this->getConfig('common');
-    }
 }
