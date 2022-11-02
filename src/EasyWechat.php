@@ -32,6 +32,8 @@ class EasyWechat extends Component
     const APP_OPEN_WORK = 'openWork'; // 企业微信开放平台
     const APP_MICRO_MERCHANT = 'microMerchant'; // 小微商户
 
+    public $configKey='easywechat';
+
     protected array $appInstances = [];
 
     public function __call($name, $arguments)
@@ -102,7 +104,7 @@ class EasyWechat extends Component
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getAppNames()
+    protected function getAppNames(): array
     {
         return [
             static::APP_OFFICIAL_ACCOUNT,
@@ -161,11 +163,11 @@ class EasyWechat extends Component
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default')
+    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default'): array
     {
         $wechatConfig = $this->getConfig('easywechat');
         $appNameConfig = $this->getAppConfig($appName, $configKey);
-        return array_merge($wechatConfig ?? [], $appNameConfig['wechat'] ?? []);
+        return array_merge($wechatConfig ?? [], $appNameConfig['easywechat'] ?? []);
     }
 
     /**
@@ -181,7 +183,7 @@ class EasyWechat extends Component
      */
     protected function getConfig(?string $key = null)
     {
-        $config = \Yii::$app->params['easywechat'];
+        $config = \Yii::$app->params[$this->configKey];
         if ($key) {
             $config = ArrayHelper::getValue($config, $key);
         }
