@@ -73,8 +73,8 @@ class EasyWechat
     /**
      * 获取app配置
      *
-     * @param $appName
-     * @param $configKey
+     * @param string $appName
+     * @param string $configKey
      *
      * @return array
      * @throws \Exception
@@ -82,7 +82,7 @@ class EasyWechat
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getAppConfig($appName = self::APP_OFFICIAL_ACCOUNT, $configKey = 'default')
+    protected function getAppConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default'): array
     {
         $appConfig = $this->getConfig("{$appName}.{$configKey}");
         $commonConfig = $this->commonConfig();
@@ -92,7 +92,7 @@ class EasyWechat
     /**
      * 获取配置
      *
-     * @param $key   key1.key2
+     * @param ?string $key   key1.key2
      *
      * @return mixed
      * @throws \Exception
@@ -100,7 +100,7 @@ class EasyWechat
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getConfig($key = null)
+    protected function getConfig(?string $key = null)
     {
         $config = \Yii::$app->params['easywechat'];
         if ($key) {
@@ -113,13 +113,13 @@ class EasyWechat
     /**
      * 获取公共配置
      *
-     * @return array
+     * @return ?array
      * @throws \Exception
      *
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function commonConfig()
+    protected function commonConfig(): ?array
     {
         return $this->getConfig('common');
     }
