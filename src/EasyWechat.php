@@ -32,9 +32,15 @@ class EasyWechat extends Component
     const APP_OPEN_WORK = 'openWork'; // 企业微信开放平台
     const APP_MICRO_MERCHANT = 'microMerchant'; // 小微商户
 
-    public $configKey='easywechat';
+    /**
+     * 配置key
+     *
+     * @var string
+     */
+    public string $configKey = 'easywechat';
 
     protected array $appInstances = [];
+
 
     public function __call($name, $arguments)
     {
