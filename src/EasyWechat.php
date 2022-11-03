@@ -98,6 +98,9 @@ class EasyWechat extends Component
     protected function rebind(ServiceContainer &$app, $rebinds)
     {
         foreach ($rebinds as $id => $rebind) {
+            if (is_callable($rebind)) {
+                $rebind = call_user_func($rebind);
+            }
             $app->rebind($id, $rebind);
         }
     }
