@@ -164,7 +164,7 @@ class EasyWechat extends Component
      * 获取当前组件独有配置
      *
      * @param string $appName
-     * @param string $configKey
+     * @param string|array $configKey
      *
      * @return array
      * @throws \Exception
@@ -172,11 +172,14 @@ class EasyWechat extends Component
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, string $configKey = 'default'): array
+    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT,  $configKey = 'default'): array
     {
         $wechatConfig = $this->getConfig('easywechat');
-        $appNameConfig = $this->getAppConfig($appName, $configKey);
-        return array_merge($wechatConfig ?? [], $appNameConfig['easywechat'] ?? []);
+        $appConfig = $configKey;
+        if(is_string($configKey)){
+            $appConfig = $this->getAppConfig($appName, $configKey);
+        }
+        return array_merge($wechatConfig ?? [], $appConfig['easywechat'] ?? []);
     }
 
     /**
