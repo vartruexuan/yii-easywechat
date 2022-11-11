@@ -24,13 +24,13 @@ class EasyWechat extends Component
 {
     use StaticInstanceTrait;
 
-    const APP_OFFICIAL_ACCOUNT = 'officialAccount'; // 公众号
-    const APP_PAYMENT = 'payment'; // 微信支付
-    const APP_MINI_PROGRAM = 'miniProgram'; // 小程序
-    const APP_OPEN_PLATFORM = 'openPlatform'; // 小程序
-    const APP_WORK = 'work'; // 企业微信
-    const APP_OPEN_WORK = 'openWork'; // 企业微信开放平台
-    const APP_MICRO_MERCHANT = 'microMerchant'; // 小微商户
+    public const APP_OFFICIAL_ACCOUNT = 'officialAccount'; // 公众号
+    public const APP_PAYMENT = 'payment'; // 微信支付
+    public const APP_MINI_PROGRAM = 'miniProgram'; // 小程序
+    public const APP_OPEN_PLATFORM = 'openPlatform'; // 小程序
+    public const APP_WORK = 'work'; // 企业微信
+    public const APP_OPEN_WORK = 'openWork'; // 企业微信开放平台
+    public const APP_MICRO_MERCHANT = 'microMerchant'; // 小微商户
 
     /**
      * 配置key
@@ -172,11 +172,11 @@ class EasyWechat extends Component
      * @date 2022/11/2
      * @author vartruexuan
      */
-    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT,  $configKey = 'default'): array
+    protected function getAppWechatConfig(string $appName = self::APP_OFFICIAL_ACCOUNT, $configKey = 'default'): array
     {
         $wechatConfig = $this->getConfig('easywechat');
         $appConfig = $configKey;
-        if(is_string($configKey)){
+        if (is_string($configKey)) {
             $appConfig = $this->getAppConfig($appName, $configKey);
         }
         return array_merge($wechatConfig ?? [], $appConfig['easywechat'] ?? []);
@@ -201,6 +201,4 @@ class EasyWechat extends Component
         }
         return $config;
     }
-
-
 }
